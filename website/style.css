@@ -1,0 +1,190 @@
+/* style.css
+   Cozy library aesthetic: warm woods, cream pages, soft amber accents.
+   Uses only what was taught: selectors (tag, class, id), colors (names,
+   hex, rgb), the Box Model (margin/padding/border), web-safe fonts,
+   and the Container pattern. */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f5ead9;
+    color: #3d2b1f;
+}
+
+/* ===== Header ===== */
+.header {
+    background-color: #3d2b1f;
+    color: #f5ead9;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.header h1 {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 42px;
+    margin: 0;
+}
+
+.header p {
+    font-family: "Times New Roman", Times, serif;
+    font-style: italic;
+    color: #d9b98a;
+    margin-top: 8px;
+}
+
+/* ===== Container ===== */
+.container {
+    width: 85%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 0;
+}
+
+/* ===== Stats bar ===== */
+.stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.stat-box {
+    background-color: #efe0c3;
+    border: 1px solid #d9b98a;
+    border-radius: 12px;
+    padding: 18px;
+    width: 30%;
+    text-align: center;
+}
+
+.stat-box span {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 32px;
+    font-weight: bold;
+    color: #7a4b25;
+}
+
+.stat-box p {
+    margin: 5px 0 0 0;
+    color: #6b5541;
+}
+
+/* ===== Cards (Container pattern) ===== */
+.card {
+    background-color: #fdf6e9;
+    border: 1px solid #e3cfa8;
+    border-radius: 14px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.card h2 {
+    font-family: "Times New Roman", Times, serif;
+    color: #5c3a21;
+    margin-top: 0;
+}
+
+/* ===== Form elements ===== */
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+input[type="text"] {
+    flex: 1;
+    min-width: 150px;
+    padding: 10px 14px;
+    border: 1px solid #d9b98a;
+    border-radius: 8px;
+    background-color: #fffaf0;
+    color: #3d2b1f;
+    font-family: Arial, sans-serif;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #a8703f;
+    color: #fdf6e9;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #7a4b25;
+}
+
+#clearSearchBtn {
+    background-color: #c9b191;
+}
+
+.sort-label {
+    padding: 10px 5px;
+    color: #6b5541;
+}
+
+.sort-btn {
+    background-color: #d9b98a;
+    color: #3d2b1f;
+}
+
+.sort-btn:hover {
+    background-color: #a8703f;
+    color: #fdf6e9;
+}
+
+/* ===== Table ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 12px;
+    background-color: #e3cfa8;
+    color: #3d2b1f;
+    font-family: "Times New Roman", Times, serif;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #e8dcc2;
+}
+
+tr:hover {
+    background-color: #f5ead9;
+}
+
+.status-available {
+    color: #3f7d3f;
+    font-weight: bold;
+}
+
+.status-borrowed {
+    color: #b5502d;
+    font-weight: bold;
+}
+
+.action-btn {
+    padding: 6px 14px;
+    font-size: 14px;
+}
+
+.empty-message {
+    text-align: center;
+    color: #a08c6f;
+    display: none;
+}
+
+/* ===== Footer ===== */
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: #6b5541;
+    font-family: "Times New Roman", Times, serif;
+    font-style: italic;
+}

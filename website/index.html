@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Library</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== Header ===== -->
+    <div class="header">
+        <h1>📚 My Library</h1>
+        <p>a cozy corner for your books</p>
+    </div>
+
+    <div class="container">
+
+        <!-- ===== Stats bar ===== -->
+        <div class="stats">
+            <div class="stat-box">
+                <span id="totalCount">0</span>
+                <p>Total Books</p>
+            </div>
+            <div class="stat-box">
+                <span id="availableCount">0</span>
+                <p>Available</p>
+            </div>
+            <div class="stat-box">
+                <span id="borrowedCount">0</span>
+                <p>Borrowed</p>
+            </div>
+        </div>
+
+        <!-- ===== Add Book Form ===== -->
+        <div class="card">
+            <h2>Add a New Book</h2>
+            <div class="form-row">
+                <input type="text" id="titleInput" placeholder="Book title">
+                <input type="text" id="authorInput" placeholder="Author">
+                <input type="text" id="categoryInput" placeholder="Category">
+                <button id="addBookBtn">Add Book</button>
+            </div>
+        </div>
+
+        <!-- ===== Search + Sort ===== -->
+        <div class="card">
+            <div class="form-row">
+                <input type="text" id="searchInput" placeholder="Search by title or author...">
+                <button id="searchBtn">Search</button>
+                <button id="clearSearchBtn">Clear</button>
+            </div>
+            <div class="form-row">
+                <span class="sort-label">Sort by:</span>
+                <button class="sort-btn" data-key="title">Title</button>
+                <button class="sort-btn" data-key="author">Author</button>
+                <button class="sort-btn" data-key="status">Status</button>
+            </div>
+        </div>
+
+        <!-- ===== Books Table ===== -->
+        <div class="card">
+            <table id="booksTable">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="booksBody">
+                    <!-- Rows are inserted here by JavaScript -->
+                </tbody>
+            </table>
+            <p id="emptyMessage" class="empty-message">No books found.</p>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <p>Library Management System — ITI Final Project</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
