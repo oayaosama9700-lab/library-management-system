@@ -1,84 +1,84 @@
 // script.js
-// Library Management System — front-end logic.
-// Uses only what was taught: variables (let/const), arrays, objects,
-// for loops, if/else, functions, arrow functions, string methods,
-// querySelector/querySelectorAll, addEventListener, innerHTML.
-//
-// The "books" array below mirrors database/books.csv, which is exported
-// from the real SQL database in /database (see that folder's README for
-// why the two are kept separate: SQL was taught only through Python in
-// this course, with no technique taught to connect JavaScript directly
-// to a live database).
+// JavaScript code for the library website
+// I wrote my own search and sort functions instead of using
+// built-in ones, since we learned linear search and selection
+// sort in the Algorithms week
 
-// ---------------------------------------------------------------
-// 1) DATA — same books as database/seed.py, one extra field (id)
-//    so each row can be found and updated individually.
-// ---------------------------------------------------------------
+// list of books (same as database/books.csv)
 let books = [
-    { id: 1, title: "Clean Code", author: "Robert C. Martin", category: "Programming", status: "available", borrowedBy: null },
-    { id: 2, title: "1984", author: "George Orwell", category: "Fiction", status: "available", borrowedBy: null },
+    { id: 1, title: "Clean Code", author: "Robert C. Martin", category: "Programming", status: "available", borrowedBy: "" },
+    { id: 2, title: "1984", author: "George Orwell", category: "Fiction", status: "available", borrowedBy: "" },
     { id: 3, title: "A Brief History of Time", author: "Stephen Hawking", category: "Science", status: "borrowed", borrowedBy: "Ahmed Hassan" },
-    { id: 4, title: "The Alchemist", author: "Paulo Coelho", category: "Fiction", status: "available", borrowedBy: null },
-    { id: 5, title: "Introduction to Algorithms", author: "Thomas H. Cormen", category: "Programming", status: "available", borrowedBy: null },
+    { id: 4, title: "The Alchemist", author: "Paulo Coelho", category: "Fiction", status: "available", borrowedBy: "" },
+    { id: 5, title: "Introduction to Algorithms", author: "Thomas H. Cormen", category: "Programming", status: "available", borrowedBy: "" },
     { id: 6, title: "Sapiens", author: "Yuval Noah Harari", category: "History", status: "borrowed", borrowedBy: "Mona Adel" },
-    { id: 7, title: "The Pragmatic Programmer", author: "David Thomas", category: "Programming", status: "available", borrowedBy: null },
-    { id: 8, title: "Harry Potter and the Sorcerer's Stone", author: "J.K. Rowling", category: "Fiction", status: "available", borrowedBy: null },
-    { id: 9, title: "Cosmos", author: "Carl Sagan", category: "Science", status: "available", borrowedBy: null },
+    { id: 7, title: "The Pragmatic Programmer", author: "David Thomas", category: "Programming", status: "available", borrowedBy: "" },
+    { id: 8, title: "Harry Potter and the Sorcerer's Stone", author: "J.K. Rowling", category: "Fiction", status: "available", borrowedBy: "" },
+    { id: 9, title: "Cosmos", author: "Carl Sagan", category: "Science", status: "available", borrowedBy: "" },
     { id: 10, title: "The Da Vinci Code", author: "Dan Brown", category: "Fiction", status: "borrowed", borrowedBy: "Youssef Tarek" }
 ];
 
-let nextId = 11;           // used to give new books a unique id
-let currentView = books;   // whatever is currently on screen (all books, or search results)
-let sortDirection = {};    // remembers ascending/descending per column
+let nextId = 11;          // id to give the next new book
+let currentView = books;  // the array currently shown on the page (all books or search results)
+let titleAscending = true;
+let authorAscending = true;
+let statusAscending = true;
 
-// ---------------------------------------------------------------
-// 2) ALGORITHMS — written by hand, as taught in the Algorithms week
-// ---------------------------------------------------------------
-
-// Linear Search: checks every book, one by one, for a match in
-// title OR author (case-insensitive).
+// this function searches the books one by one (linear search)
+// it checks if the title or author has the word the user typed
 function linearSearch(array, query) {
     let results = [];
     query = query.toLowerCase();
+
     for (let i = 0; i < array.length; i++) {
         let title = array[i].title.toLowerCase();
         let author = array[i].author.toLowerCase();
+
         if (title.includes(query) || author.includes(query)) {
             results.push(array[i]);
         }
     }
+
     return results;
 }
 
-// Selection Sort: repeatedly finds the smallest remaining item
-// and swaps it into place. Sorts a COPY of the array so the
-// original data (and any active search) isn't lost.
+// this function sorts the books using selection sort
+// I made a copy of the array first so I don't mess up the original list
 function selectionSort(array, key, ascending) {
-    let sorted = array.slice(); // copy, so we don't touch the original array
-    let n = sorted.length;
+    let copiedArray = [];
+    for (let i = 0; i < array.length; i++) {
+        copiedArray.push(array[i]);
+    }
 
-    for (let i = 0; i < n - 1; i++) {
+    for (let i = 0; i < copiedArray.length - 1; i++) {
         let targetIndex = i;
-        for (let j = i + 1; j < n; j++) {
-            let a = sorted[j][key].toLowerCase();
-            let b = sorted[targetIndex][key].toLowerCase();
-            let shouldSwap = ascending ? (a < b) : (a > b);
-            if (shouldSwap) {
-                targetIndex = j;
+
+        for (let j = i + 1; j < copiedArray.length; j++) {
+            let a = copiedArray[j][key].toLowerCase();
+            let b = copiedArray[targetIndex][key].toLowerCase();
+
+            if (ascending) {
+                if (a < b) {
+                    targetIndex = j;
+                }
+            } else {
+                if (a > b) {
+                    targetIndex = j;
+                }
             }
         }
+
         if (targetIndex !== i) {
-            let temp = sorted[i];
-            sorted[i] = sorted[targetIndex];
-            sorted[targetIndex] = temp;
+            let temp = copiedArray[i];
+            copiedArray[i] = copiedArray[targetIndex];
+            copiedArray[targetIndex] = temp;
         }
     }
-    return sorted;
+
+    return copiedArray;
 }
 
-// ---------------------------------------------------------------
-// 3) RENDERING — builds the table rows from whatever array is passed in
-// ---------------------------------------------------------------
+// this function shows the books on the page (builds the table)
 function renderBooks(array) {
     let tbody = document.querySelector("#booksBody");
     let emptyMessage = document.querySelector("#emptyMessage");
@@ -86,46 +86,61 @@ function renderBooks(array) {
 
     for (let i = 0; i < array.length; i++) {
         let book = array[i];
-        let statusClass = book.status === "available" ? "status-available" : "status-borrowed";
-        let statusText = book.status === "available" ? "Available" : "Borrowed by " + book.borrowedBy;
 
-        let actionButton = book.status === "available"
-            ? `<button class="action-btn" onclick="checkoutBook(${book.id})">Checkout</button>`
-            : `<button class="action-btn" onclick="returnBook(${book.id})">Return</button>`;
+        let statusClass = "";
+        let statusText = "";
+        if (book.status === "available") {
+            statusClass = "status-available";
+            statusText = "Available";
+        } else {
+            statusClass = "status-borrowed";
+            statusText = "Borrowed by " + book.borrowedBy;
+        }
 
-        html += `
-            <tr>
-                <td>${book.title}</td>
-                <td>${book.author}</td>
-                <td>${book.category}</td>
-                <td class="${statusClass}">${statusText}</td>
-                <td>${actionButton}</td>
-            </tr>
-        `;
+        let actionButton = "";
+        if (book.status === "available") {
+            actionButton = "<button class='action-btn' onclick='checkoutBook(" + book.id + ")'>Checkout</button>";
+        } else {
+            actionButton = "<button class='action-btn' onclick='returnBook(" + book.id + ")'>Return</button>";
+        }
+
+        html = html + "<tr>"
+            + "<td>" + book.title + "</td>"
+            + "<td>" + book.author + "</td>"
+            + "<td>" + book.category + "</td>"
+            + "<td class='" + statusClass + "'>" + statusText + "</td>"
+            + "<td>" + actionButton + "</td>"
+            + "</tr>";
     }
 
     tbody.innerHTML = html;
-    emptyMessage.style.display = array.length === 0 ? "block" : "none";
+
+    if (array.length === 0) {
+        emptyMessage.style.display = "block";
+    } else {
+        emptyMessage.style.display = "none";
+    }
+
     updateStats();
 }
 
-// Stats footer: reuses the same array logic as SQL's COUNT()/GROUP BY
+// updates the numbers at the top (total, available, borrowed)
 function updateStats() {
     let total = books.length;
     let available = 0;
+
     for (let i = 0; i < books.length; i++) {
         if (books[i].status === "available") {
-            available++;
+            available = available + 1;
         }
     }
+
     document.querySelector("#totalCount").textContent = total;
     document.querySelector("#availableCount").textContent = available;
     document.querySelector("#borrowedCount").textContent = total - available;
 }
 
-// ---------------------------------------------------------------
-// 4) ACTIONS — add book, checkout, return
-// ---------------------------------------------------------------
+// adds a new book from the form inputs
 function addBook() {
     let titleInput = document.querySelector("#titleInput");
     let authorInput = document.querySelector("#authorInput");
@@ -146,11 +161,11 @@ function addBook() {
         author: author,
         category: category,
         status: "available",
-        borrowedBy: null
+        borrowedBy: ""
     };
 
     books.push(newBook);
-    nextId++;
+    nextId = nextId + 1;
 
     titleInput.value = "";
     authorInput.value = "";
@@ -160,10 +175,11 @@ function addBook() {
     renderBooks(currentView);
 }
 
+// marks a book as borrowed
 function checkoutBook(id) {
     let name = prompt("Enter the borrower's name:");
     if (name === null || name.trim() === "") {
-        return; // user cancelled or left it empty
+        return;
     }
 
     for (let i = 0; i < books.length; i++) {
@@ -177,11 +193,12 @@ function checkoutBook(id) {
     renderBooks(currentView);
 }
 
+// marks a book as available again
 function returnBook(id) {
     for (let i = 0; i < books.length; i++) {
         if (books[i].id === id) {
             books[i].status = "available";
-            books[i].borrowedBy = null;
+            books[i].borrowedBy = "";
             break;
         }
     }
@@ -189,49 +206,60 @@ function returnBook(id) {
     renderBooks(currentView);
 }
 
-// ---------------------------------------------------------------
-// 5) EVENT LISTENERS — wire everything up once the page has loaded
-// ---------------------------------------------------------------
+// this runs when you click the Title, Author, or Status button
+function sortBooks(key) {
+    let ascending = true;
+
+    if (key === "title") {
+        ascending = titleAscending;
+        titleAscending = !titleAscending;
+    } else if (key === "author") {
+        ascending = authorAscending;
+        authorAscending = !authorAscending;
+    } else if (key === "status") {
+        ascending = statusAscending;
+        statusAscending = !statusAscending;
+    }
+
+    currentView = selectionSort(currentView, key, ascending);
+    renderBooks(currentView);
+}
+
+// this runs when you click the Search button
+function searchBooks() {
+    let query = document.querySelector("#searchInput").value.trim();
+
+    if (query === "") {
+        currentView = books;
+    } else {
+        currentView = linearSearch(books, query);
+    }
+
+    renderBooks(currentView);
+}
+
+// clears the search box and shows all books again
+function clearSearch() {
+    document.querySelector("#searchInput").value = "";
+    currentView = books;
+    renderBooks(currentView);
+}
+
+// this runs once the page loads, and connects the buttons to their functions
 document.addEventListener("DOMContentLoaded", function () {
 
     renderBooks(books);
 
     document.querySelector("#addBookBtn").addEventListener("click", addBook);
+    document.querySelector("#searchBtn").addEventListener("click", searchBooks);
+    document.querySelector("#clearSearchBtn").addEventListener("click", clearSearch);
 
-    document.querySelector("#searchBtn").addEventListener("click", function () {
-        let query = document.querySelector("#searchInput").value.trim();
-        if (query === "") {
-            currentView = books;
-        } else {
-            currentView = linearSearch(books, query);
-        }
-        renderBooks(currentView);
-    });
-
-    document.querySelector("#clearSearchBtn").addEventListener("click", function () {
-        document.querySelector("#searchInput").value = "";
-        currentView = books;
-        renderBooks(currentView);
-    });
-
-    // Also allow pressing Enter inside the search box
+    // let the user press Enter in the search box instead of clicking Search
     document.querySelector("#searchInput").addEventListener("keyup", function (event) {
         if (event.key === "Enter") {
-            document.querySelector("#searchBtn").click();
+            searchBooks();
         }
-    });
-
-    // Sort buttons (Title / Author / Status)
-    let sortButtons = document.querySelectorAll(".sort-btn");
-    sortButtons.forEach(function (btn) {
-        btn.addEventListener("click", function () {
-            let key = btn.dataset.key;
-            let ascending = sortDirection[key] !== true; // flip each click
-            sortDirection[key] = ascending;
-
-            currentView = selectionSort(currentView, key, ascending);
-            renderBooks(currentView);
-        });
     });
 
 });
+
