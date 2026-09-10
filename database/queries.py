@@ -1,54 +1,62 @@
-# queries.py
-# Demonstrates every SQL statement taught in Week 7 (SQL) against library.db
-# Run this AFTER seed.py
 
-from cs50 import SQL
 
-db = SQL("sqlite:///library.db")
+import sqlite3
 
-print("1) SELECT * — all books")
-rows = db.execute("SELECT * FROM books")
-for row in rows:
+conn = sqlite3.connect("library.db")
+cursor = conn.cursor()
+
+print("1) SELECT * - all books")
+cursor.execute("SELECT * FROM books")
+for row in cursor.fetchall():
     print(row)
 
-print("\n2) WHERE — books that are currently borrowed")
-rows = db.execute("SELECT title, author FROM books WHERE status = ?", "borrowed")
-for row in rows:
+print("\n2) WHERE - borrowed books")
+cursor.execute("SELECT title, author FROM books WHERE status = ?", ("borrowed",))
+for row in cursor.fetchall():
     print(row)
 
-print("\n3) LIKE — search books whose title contains 'the'")
-rows = db.execute("SELECT title FROM books WHERE title LIKE ?", "%the%")
-for row in rows:
+print("\n3) LIKE - titles containing 'The'")
+cursor.execute("SELECT title FROM books WHERE title LIKE ?", ("%The%",))
+for row in cursor.fetchall():
     print(row)
 
-print("\n4) ORDER BY — books sorted alphabetically by title")
-rows = db.execute("SELECT title FROM books ORDER BY title ASC")
-for row in rows:
+print("\n4) ORDER BY - books sorted by title")
+cursor.execute("SELECT title FROM books ORDER BY title ASC")
+for row in cursor.fetchall():
     print(row)
 
-print("\n5) GROUP BY + COUNT — number of books per category")
-rows = db.execute("SELECT category, COUNT(*) AS total FROM books GROUP BY category")
-for row in rows:
+print("\n5) GROUP BY + COUNT - books per category")
+cursor.execute("SELECT category, COUNT(*) FROM books GROUP BY category")
+for row in cursor.fetchall():
     print(row)
 
-print("\n6) Aggregate functions — total books, and how many are available")
-total = db.execute("SELECT COUNT(*) AS total FROM books")[0]["total"]
-available = db.execute("SELECT COUNT(*) AS total FROM books WHERE status = ?", "available")[0]["total"]
-print(f"Total books: {total} | Available: {available} | Borrowed: {total - available}")
+print("\n6) Aggregate functions - totals")
+cursor.execute("SELECT COUNT(*) FROM books")
+total = cursor.fetchone()[0]
+cursor.execute("SELECT COUNT(*) FROM books WHERE status = ?", ("available",))
+available = cursor.fetchone()[0]
+print(f"Total: {total} | Available: {available} | Borrowed: {total - available}")
 
-print("\n7) JOIN — books currently borrowed, with the borrower's name and date")
-rows = db.execute("""
+print("\n7) JOIN - borrowed books with borrower name and date")
+cursor.execute("""
     SELECT books.title, borrowers.borrower_name, borrowers.borrow_date
     FROM books
     JOIN borrowers ON borrowers.book_id = books.id
 """)
-for row in rows:
+for row in cursor.fetchall():
     print(row)
 
-print("\n8) UPDATE — mark 'The Alchemist' as borrowed")
-db.execute("UPDATE books SET status = ? WHERE title = ?", "borrowed", "The Alchemist")
-print("Done. New status:", db.execute("SELECT status FROM books WHERE title = ?", "The Alchemist"))
+print("\n8) UPDATE - mark 'Atomic Habits' as borrowed")
+cursor.execute("UPDATE books SET status = ? WHERE title = ?", ("borrowed", "Atomic Habits"))
+conn.commit()
+cursor.execute("SELECT status FROM books WHERE title = ?", ("Atomic Habits",))
+print("New status:", cursor.fetchone())
 
-print("\n9) DELETE — remove a borrow record (example: id 1)")
-db.execute("DELETE FROM borrowers WHERE id = ?", 1)
-print("Remaining borrow records:", db.execute("SELECT * FROM borrowers"))
+print("\n9) DELETE - remove borrow record id 1")
+cursor.execute("DELETE FROM borrowers WHERE id = ?", (1,))
+conn.commit()
+cursor.execute("SELECT * FROM borrowers")
+print("Remaining borrow records:", cursor.fetchall())
+
+conn.close()
+
