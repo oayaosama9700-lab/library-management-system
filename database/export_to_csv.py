@@ -1,15 +1,21 @@
+# exporting the books table to books.csv using the csv module
 
-from cs50 import SQL
+import sqlite3
 import csv
 
-db = SQL("sqlite:///library.db")
+conn = sqlite3.connect("library.db")
+cursor = conn.cursor()
 
-rows = db.execute("SELECT title, author, category, status FROM books ORDER BY id")
+cursor.execute("SELECT title, author, category, status FROM books ORDER BY id")
+rows = cursor.fetchall()
 
-with open("books.csv", "w", newline="") as file:
-    writer = csv.DictWriter(file, fieldnames=["title", "author", "category", "status"])
-    writer.writeheader()
+with open("books.csv", "w", newline="", encoding="utf-8") as file:
+    writer = csv.writer(file)
+    writer.writerow(["title", "author", "category", "status"])
     for row in rows:
         writer.writerow(row)
 
+conn.close()
+
 print(f"Exported {len(rows)} books to books.csv")
+
