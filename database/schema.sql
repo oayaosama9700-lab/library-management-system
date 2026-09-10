@@ -1,7 +1,3 @@
--- schema.sql
--- Library Management System — Database Schema
--- Uses only SQL statements taught in the course (CREATE TABLE, PRIMARY KEY, FOREIGN KEY)
-
 -- Table 1: books
 -- Stores every book in the library and its current status
 CREATE TABLE books (
