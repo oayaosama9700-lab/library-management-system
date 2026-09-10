@@ -1,8 +1,4 @@
-/* style.css
-   Cozy library aesthetic: warm woods, cream pages, soft amber accents.
-   Uses only what was taught: selectors (tag, class, id), colors (names,
-   hex, rgb), the Box Model (margin/padding/border), web-safe fonts,
-   and the Container pattern. */
+/* Cozy library aesthetic */
 
 body {
     margin: 0;
