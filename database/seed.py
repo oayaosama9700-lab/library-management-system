@@ -1,5 +1,4 @@
-# seed.py
-# builds library.db and adds sample books
+# building library and adding sample books
 
 import sqlite3
 import os
