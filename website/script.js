@@ -1,4 +1,3 @@
-// script.js
 // JavaScript code for the library website
 // I wrote my own search and sort functions instead of using
 // built-in ones, since we learned linear search and selection
@@ -6,16 +5,16 @@
 
 // list of books (same as database/books.csv)
 let books = [
-    { id: 1, title: "Clean Code", author: "Robert C. Martin", category: "Programming", status: "available", borrowedBy: "" },
-    { id: 2, title: "1984", author: "George Orwell", category: "Fiction", status: "available", borrowedBy: "" },
-    { id: 3, title: "A Brief History of Time", author: "Stephen Hawking", category: "Science", status: "borrowed", borrowedBy: "Ahmed Hassan" },
-    { id: 4, title: "The Alchemist", author: "Paulo Coelho", category: "Fiction", status: "available", borrowedBy: "" },
-    { id: 5, title: "Introduction to Algorithms", author: "Thomas H. Cormen", category: "Programming", status: "available", borrowedBy: "" },
-    { id: 6, title: "Sapiens", author: "Yuval Noah Harari", category: "History", status: "borrowed", borrowedBy: "Mona Adel" },
-    { id: 7, title: "The Pragmatic Programmer", author: "David Thomas", category: "Programming", status: "available", borrowedBy: "" },
-    { id: 8, title: "Harry Potter and the Sorcerer's Stone", author: "J.K. Rowling", category: "Fiction", status: "available", borrowedBy: "" },
-    { id: 9, title: "Cosmos", author: "Carl Sagan", category: "Science", status: "available", borrowedBy: "" },
-    { id: 10, title: "The Da Vinci Code", author: "Dan Brown", category: "Fiction", status: "borrowed", borrowedBy: "Youssef Tarek" }
+    { id: 1, title: "الأيام", author: "طه حسين", category: "Literature", status: "available", borrowedBy: "" },
+    { id: 2, title: "مقدمة ابن خلدون", author: "ابن خلدون", category: "History", status: "available", borrowedBy: "" },
+    { id: 3, title: "Refactoring", author: "Martin Fowler", category: "Programming", status: "borrowed", borrowedBy: "Ahmed Hassan" },
+    { id: 4, title: "Python Crash Course", author: "Eric Matthes", category: "Programming", status: "available", borrowedBy: "" },
+    { id: 5, title: "Atomic Habits", author: "James Clear", category: "Self-Help", status: "available", borrowedBy: "" },
+    { id: 6, title: "رجال في الشمس", author: "غسان كنفاني", category: "Fiction", status: "borrowed", borrowedBy: "Mona Adel" },
+    { id: 7, title: "The Selfish Gene", author: "Richard Dawkins", category: "Science", status: "available", borrowedBy: "" },
+    { id: 8, title: "مدن الملح", author: "عبد الرحمن منيف", category: "Fiction", status: "available", borrowedBy: "" },
+    { id: 9, title: "Deep Work", author: "Cal Newport", category: "Self-Help", status: "borrowed", borrowedBy: "Youssef Tarek" },
+    { id: 10, title: "عزازيل", author: "يوسف زيدان", category: "Fiction", status: "available", borrowedBy: "" }
 ];
 
 let nextId = 11;          // id to give the next new book
@@ -254,7 +253,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector("#searchBtn").addEventListener("click", searchBooks);
     document.querySelector("#clearSearchBtn").addEventListener("click", clearSearch);
 
-    // let the user press Enter in the search box instead of clicking Search
+    // lets the user press Enter in the search box instead of clicking Search
     document.querySelector("#searchInput").addEventListener("keyup", function (event) {
         if (event.key === "Enter") {
             searchBooks();
