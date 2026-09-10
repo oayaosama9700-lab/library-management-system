@@ -1,64 +1,56 @@
 # seed.py
-# Creates library.db from schema.sql, then inserts sample books.
-# Uses the CS50 SQL library, exactly as taught in the "Using SQL in Python" lesson:
-#     db = SQL("sqlite:///favorites.db")
-#     db.execute(...)
+# builds library.db and adds sample books
 
-from cs50 import SQL
 import sqlite3
 import os
 
 DB_FILE = "library.db"
 SCHEMA_FILE = "schema.sql"
 
-# Step 1: if a database already exists from a previous run, remove it
-# so this script can be run again safely.
 if os.path.exists(DB_FILE):
     os.remove(DB_FILE)
 
-# Step 2: build the database structure from schema.sql
-# (sqlite3 is used only here, to run the raw .sql file — the actual
-# data operations below all go through CS50's db.execute, as taught)
-connection = sqlite3.connect(DB_FILE)
+conn = sqlite3.connect(DB_FILE)
+cursor = conn.cursor()
+
 with open(SCHEMA_FILE, "r") as file:
-    connection.executescript(file.read())
-connection.close()
+    cursor.executescript(file.read())
 
-# Step 3: connect with the CS50 SQL library, the way the course taught it
-db = SQL(f"sqlite:///{DB_FILE}")
-
-# Step 4: insert (CREATE, in CRUD terms) sample books
 books = [
-    ("Clean Code", "Robert C. Martin", "Programming", "available"),
-    ("1984", "George Orwell", "Fiction", "available"),
-    ("A Brief History of Time", "Stephen Hawking", "Science", "borrowed"),
-    ("The Alchemist", "Paulo Coelho", "Fiction", "available"),
-    ("Introduction to Algorithms", "Thomas H. Cormen", "Programming", "available"),
-    ("Sapiens", "Yuval Noah Harari", "History", "borrowed"),
-    ("The Pragmatic Programmer", "David Thomas", "Programming", "available"),
-    ("Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "Fiction", "available"),
-    ("Cosmos", "Carl Sagan", "Science", "available"),
-    ("The Da Vinci Code", "Dan Brown", "Fiction", "borrowed"),
+    ("الأيام", "طه حسين", "Literature", "available"),
+    ("مقدمة ابن خلدون", "ابن خلدون", "History", "available"),
+    ("Refactoring", "Martin Fowler", "Programming", "borrowed"),
+    ("Python Crash Course", "Eric Matthes", "Programming", "available"),
+    ("Atomic Habits", "James Clear", "Self-Help", "available"),
+    ("رجال في الشمس", "غسان كنفاني", "Fiction", "borrowed"),
+    ("The Selfish Gene", "Richard Dawkins", "Science", "available"),
+    ("مدن الملح", "عبد الرحمن منيف", "Fiction", "available"),
+    ("Deep Work", "Cal Newport", "Self-Help", "borrowed"),
+    ("عزازيل", "يوسف زيدان", "Fiction", "available"),
 ]
 
 for title, author, category, status in books:
-    db.execute(
-        "INSERT INTO books (title, author, category, status) VALUES(?, ?, ?, ?)",
-        title, author, category, status
+    cursor.execute(
+        "INSERT INTO books (title, author, category, status) VALUES (?, ?, ?, ?)",
+        (title, author, category, status)
     )
 
-# Step 5: insert a couple of matching borrow records for the "borrowed" books
-db.execute(
-    "INSERT INTO borrowers (book_id, borrower_name, borrow_date) VALUES(?, ?, ?)",
-    3, "Ahmed Hassan", "2025-08-01"
+# add borrow records for the 3 books marked "borrowed" above
+cursor.execute(
+    "INSERT INTO borrowers (book_id, borrower_name, borrow_date) VALUES (?, ?, ?)",
+    (3, "Ahmed Hassan", "2025-08-01")
 )
-db.execute(
-    "INSERT INTO borrowers (book_id, borrower_name, borrow_date) VALUES(?, ?, ?)",
-    6, "Mona Adel", "2025-08-10"
+cursor.execute(
+    "INSERT INTO borrowers (book_id, borrower_name, borrow_date) VALUES (?, ?, ?)",
+    (6, "Mona Adel", "2025-08-10")
 )
-db.execute(
-    "INSERT INTO borrowers (book_id, borrower_name, borrow_date) VALUES(?, ?, ?)",
-    10, "Youssef Tarek", "2025-08-15"
+cursor.execute(
+    "INSERT INTO borrowers (book_id, borrower_name, borrow_date) VALUES (?, ?, ?)",
+    (9, "Youssef Tarek", "2025-08-15")
 )
 
+conn.commit()
+conn.close()
+
 print("library.db created and seeded successfully.")
+
