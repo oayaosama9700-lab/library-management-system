@@ -1,5 +1,4 @@
-# building library and adding sample books
-
+# building library.db and adding sample books
 import sqlite3
 import os
 
